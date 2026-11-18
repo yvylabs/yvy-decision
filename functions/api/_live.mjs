@@ -109,35 +109,41 @@ export function overlayDecisiones(payload, estados, recomendaciones = {}) {
   return { ...payload, decisiones, consulta: 'en_vivo' };
 }
 
-async function jsonDe(ruta, origin) {
-  return fetch(new URL(ruta, origin)).then((r) => r.json()).catch(() => null);
+async function jsonDe(ruta, origin, env) {
+  const url = new URL(ruta, origin);
+  const assetFetch = env?.ASSETS?.fetch || fetch;
+  try {
+    const r = await assetFetch(url);
+    if (!r.ok || !(r.headers.get('content-type') || '').includes('json')) return null;
+    return await r.json();
+  } catch { return null; }
 }
 
-export async function handleLive(request) {
+export async function handleLive(request, env) {
   const url = new URL(request.url);
   const ruta = url.pathname;
   if (!ruta.startsWith('/api/')) return null;
 
   if (ruta === '/api/fuentes') {
-    const f = await jsonDe('/fuentes.json', url.origin);
+    const f = await jsonDe('/fuentes.json', url.origin, env);
     return Response.json(f || { fuentes: [] });
   }
   if (ruta === '/api/grafo') {
-    const g = await jsonDe('/grafo.json', url.origin);
+    const g = await jsonDe('/grafo.json', url.origin, env);
     return Response.json(g || { nodos: [], aristas: [] });
   }
   if (ruta === '/api/buscar') {
     const q = url.searchParams.get('q') || '';
-    const f = await jsonDe('/fuentes.json', url.origin);
+    const f = await jsonDe('/fuentes.json', url.origin, env);
     const estados = await estadoFuentes(f?.fuentes || [], q);
     return Response.json({ q, estados, generado: new Date().toISOString() });
   }
   if (ruta === '/api/decisiones') {
     const q = url.searchParams.get('q') || '';
     const [payload, f, grafo] = await Promise.all([
-      jsonDe('/decisiones.json', url.origin),
-      jsonDe('/fuentes.json', url.origin),
-      jsonDe('/grafo.json', url.origin),
+      jsonDe('/decisiones.json', url.origin, env),
+      jsonDe('/fuentes.json', url.origin, env),
+      jsonDe('/grafo.json', url.origin, env),
     ]);
     if (!payload) return Response.json({ error: 'decisiones.json no publicado' }, { status: 503 });
     const estados = await estadoFuentes(f?.fuentes || [], q);

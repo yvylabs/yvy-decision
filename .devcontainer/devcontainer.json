@@ -1,0 +1,12 @@
+{
+  "name": "Yvy Decisión",
+  "image": "mcr.microsoft.com/devcontainers/python:3.11",
+  "features": {},
+  "postCreateCommand": "pip install -r requirements-decisiones.txt",
+  "customizations": {
+    "vscode": {
+      "extensions": ["redhat.vscode-yaml", "esbenp.prettier-vscode"]
+    }
+  },
+  "remoteUser": "vscode"
+}

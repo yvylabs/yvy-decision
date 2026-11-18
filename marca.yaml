@@ -1,0 +1,12 @@
+# Marca blanca: el cliente cambia SOLO este archivo + sus datos.
+version: 1
+producto: Yvy Decisión
+cliente:
+  nombre: Gobierno de Salta
+  dominio: explorer.yvylabs.com
+  logo: assets/logo_cliente.png
+  color: "#0F5132"
+  idioma: es
+mensaje: >-
+  No hay fuente oficial ENCONTRADA. Es posible generar una estimación
+  basada en fuentes científicas pero NO oficiales.

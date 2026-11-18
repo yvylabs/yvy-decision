@@ -1,0 +1,66 @@
+# Datos GENERADOS por Yvy Labs. NUNCA se presentan como oficiales.
+version: 1
+productor: Yvy Labs
+
+fuentes:
+  - id: buildup_2023
+    tipo: gpkg
+    archivo: datos/buildup_2023_cerrillos.gpkg
+    capa: edificios
+    productor: Google
+    oficial: false
+    fecha_corte: "2023-12"
+    geometria: Polygon
+    srid_original: null
+    reproject_a: 4326
+    campos: [id_edificio, area_m2, anio]
+    hash_original: null
+    estado: pendiente_de_carga
+    nota: peso dasimetrico. No es fuente de poblacion.
+
+  - id: radios_indec_2022
+    tipo: gpkg
+    archivo: datos/indec_radios_salta.gpkg
+    capa: radios_censales
+    organismo: INDEC
+    oficial: true
+    fecha_corte: "2022-05"
+    geometria: Polygon
+    campos: [radio_id, poblacion_total, hogares, departamento_id]
+    hash_original: null
+    estado: pendiente_de_carga
+    nota: unidad oficial. Nunca se corta un radio.
+
+  - id: poblacion_barrio_estimada
+    tipo: derivado
+    productor: Yvy Labs
+    oficial: false
+    no_oficial: true
+    metodo: dasimetrico_buildup_2023
+    requiere: [radios_indec_2022, buildup_2023, barrios_cerrillos]
+    unidad: habitantes
+    nivel: barrio
+    control: suma_por_radio_igual_a_oficial
+    tolerancia_control: 0
+    confianza: null
+    hash_derivado: null
+    estado: pendiente_de_generacion
+    aviso_ui: >-
+      Estimación no oficial basada en radios censales del Censo 2022 y
+      construcciones de Google BuildUp 2023. Sirve para priorizar,
+      no para publicar como dato del INDEC.
+
+  - id: barrios_cerrillos
+    tipo: gpkg
+    archivo: datos/barrios_cerrillos.gpkg
+    capa: barrios
+    productor: Yvy Labs / fuente municipal
+    oficial: false
+    no_oficial: true
+    fecha_corte: null
+    geometria: Polygon
+    campos: [id_barrio, nombre_barrio, fuente_delimitacion]
+    hash_original: null
+    estado: pendiente_de_carga
+    nota: el barrio NO es unidad estadistica INDEC. Nunca radio = barrio.
+

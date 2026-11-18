@@ -1,0 +1,598 @@
+# Yvy Decisión — allowlist de fuentes oficiales
+# Regla de oro: NUNCA usar la home como `base`. Solo API / geoservicio / dataset.
+# Cualquier fuente fuera de esta lista NO existe para el motor.
+# Verificado: 2026-11-18. Dominios .gob.ar / .gov.ar NO se normalizan.
+
+version: 1
+verificado_el: "2026-11-18"
+
+# ---------------------------------------------------------------------------
+# CAPA MADRE — descubrimiento
+# ---------------------------------------------------------------------------
+fuentes:
+  - id: datos_gob_ar
+    tipo: ckan
+    base: https://datos.gob.ar/api/3/action
+    modos: [package_search, package_show, resource_search, datastore_search]
+    organismos_permitidos: [INDEC, IGN, Ministerio de Educacion, SMN, Ministerio de Economia]
+    temas_permitidos: [poblacion, educacion, catastro, mineria, clima, presupuesto]
+    formatos: [csv, xlsx, json, geojson, pdf]
+    campo_fecha_corte: result.metadata_modified
+    campo_unidad: result.notes
+    campo_licencia: result.license_title
+    max_resultados: 5
+    cache_horas: 24
+    pdf_escaneado: false
+    alcance_territorial: nacional
+    jurisdiccion: nacional
+    relacion: describe
+    estado: activo
+
+  - id: argentina_gob_ar
+    tipo: rest
+    base: https://www.argentina.gob.ar
+    modos: [busqueda_tramites, ficha_organismo]
+    organismos_permitidos: [APN]
+    temas_permitidos: [tramites, organismos, normativa_vigente]
+    formatos: [html, pdf]
+    campo_fecha_corte: fecha_actualizacion
+    campo_unidad: no_aplica
+    max_resultados: 5
+    cache_horas: 720
+    alcance_territorial: nacional
+    jurisdiccion: nacional
+    relacion: regula
+    estado: activo
+    nota: solo validar organismo/tramite vigente, nunca dato numerico
+
+  - id: idera
+    tipo: ckan
+    base: https://www.idera.gob.ar
+    modos: [busqueda_catalogo, geoservicios]
+    organismos_permitidos: [IGN, CONAE, INTA, provincias]
+    temas_permitidos: [catastro, geodesia, ambiente, ordenamiento_territorial, mineria]
+    formatos: [geojson, wms, wfs]
+    campo_fecha_corte: metadata.modified
+    campo_unidad: metadato
+    max_resultados: 5
+    cache_horas: 168
+    alcance_territorial: nacional
+    jurisdiccion: nacional
+    relacion: describe
+    estado: activo
+
+  # ---------------------------------------------------------------------------
+  # ECONOMIA / ESTADISTICA
+  # ---------------------------------------------------------------------------
+  - id: indec_series
+    tipo: rest
+    base: https://apis.datos.gob.ar/series/api
+    modos: [search, series]
+    organismos_permitidos: [INDEC, BCRA, Ministerio de Economia]
+    temas_permitidos: [inflacion, IPC, empleo, pobreza, actividad, EMAE, salarios]
+    formatos: [json, csv]
+    campo_fecha_corte: data.max_value_date
+    campo_unidad: data.units
+    max_resultados: 5
+    cache_horas: 24
+    alcance_territorial: nacional
+    jurisdiccion: nacional
+    relacion: describe
+    estado: activo
+
+  - id: bcra
+    tipo: rest
+    base: https://api.bcra.gob.ar/estadisticas/v4.0
+    modos: [variables, datosVariable, cambiarias]
+    organismos_permitidos: [BCRA]
+    temas_permitidos: [dolar, tasa, reservas, inflacion, base_monetaria, CER]
+    formatos: [json]
+    campo_fecha_corte: fecha
+    campo_unidad: unidad
+    max_resultados: 5
+    cache_horas: 12
+    alcance_territorial: nacional
+    jurisdiccion: nacional
+    relacion: describe
+    estado: activo
+
+  - id: presupuesto_abierto
+    tipo: rest
+    base: https://www.presupuestoabierto.gob.ar/api
+    modos: [gasto, ingresos, programacion_fisica, ejecucion_fisica]
+    organismos_permitidos: [Ministerio de Economia, Secretaria de Hacienda]
+    temas_permitidos: [presupuesto, gasto_publico, ingresos]
+    formatos: [json, csv]
+    campo_fecha_corte: fecha de ejecucion
+    campo_unidad: pesos
+    max_resultados: 5
+    cache_horas: 168
+    alcance_territorial: nacional
+    jurisdiccion: nacional
+    relacion: describe
+    estado: activo
+
+  - id: comprar_ar
+    tipo: rest
+    base: https://comprar.gob.ar
+    modos: [licitaciones, adjudicaciones, busqueda_avanzada]
+    organismos_permitidos: [Oficina Nacional de Contrataciones, APN]
+    temas_permitidos: [compras_publicas, proveedores, precios_estado]
+    formatos: [html, pdf, xlsx]
+    campo_fecha_corte: fecha_apertura
+    campo_unidad: pesos
+    max_resultados: 5
+    cache_horas: 24
+    requiere_login: false
+    alcance_territorial: nacional
+    jurisdiccion: nacional
+    relacion: regula
+    estado: activo
+
+  - id: boletin_oficial
+    tipo: listado_pdf
+    base: https://www.boletinoficial.gob.ar
+    modos: [busqueda_avanzada, edicion_dia]
+    organismos_permitidos: [Poder Ejecutivo, Legislativo, Judicial]
+    temas_permitidos: [decretos, resoluciones, disposiciones, normativa]
+    formatos: [pdf]
+    campo_fecha_corte: fecha de publicacion BORA
+    campo_unidad: no_aplica
+    max_resultados: 5
+    cache_horas: 24
+    pdf_escaneado: true
+    alcance_territorial: nacional
+    jurisdiccion: nacional
+    relacion: regula
+    estado: activo
+    nota: hoy BORA entra en ronda 2 por pdf_escaneado
+
+  - id: arca
+    tipo: listado_pdf
+    base: https://www.afip.gob.ar
+    alternativas: [https://www.argentina.gob.ar/arca]
+    modos: [listado_pdf]
+    organismos_permitidos: [ARCA]
+    temas_permitidos: [fiscal, aduana, recaudacion]
+    formatos: [pdf, html]
+    campo_fecha_corte: fecha_publicacion
+    campo_unidad: pesos
+    max_resultados: 5
+    cache_horas: 720
+    requiere_login: false
+    alcance_territorial: nacional
+    jurisdiccion: nacional
+    relacion: regula
+    estado: activo
+    nota: NO hardcodear arca.gob.ar. Nunca CUIT/clave fiscal.
+
+  # ---------------------------------------------------------------------------
+  # GEO / CLIMA
+  # ---------------------------------------------------------------------------
+  - id: ign
+    tipo: wms_wfs
+    base: https://wms.ign.gob.ar/geoserver/ows
+    modos: [GetCapabilities, GetMap, GetFeatureInfo, GetFeature]
+    organismos_permitidos: [IGN]
+    temas_permitidos: [catastro, limites, departamentos, localidades, argenmap]
+    formatos: [geojson, wms, wfs]
+    campo_fecha_corte: metadato de capa
+    campo_unidad: grados EPSG:4326
+    max_resultados: 5
+    cache_horas: 168
+    alcance_territorial: nacional
+    jurisdiccion: nacional
+    relacion: describe
+    estado: activo
+
+  - id: smn
+    tipo: csv_directo
+    base: https://www.smn.gob.ar
+    base_dataset: https://datos.gob.ar/api/3/action/package_search?q=SMN
+    modos: [pronostico_5_dias, alertas]
+    organismos_permitidos: [SMN]
+    temas_permitidos: [clima, pronostico, alertas]
+    formatos: [csv, json]
+    campo_fecha_corte: fecha_actualizacion
+    campo_unidad: grados_C / km_h / mm
+    max_resultados: 5
+    cache_horas: 3
+    alcance_territorial: nacional
+    jurisdiccion: nacional
+    relacion: describe
+    estado: activo
+    nota: NO inventar ws.smn.gob.ar
+
+  - id: shn
+    tipo: csv_directo
+    base: https://www.hidro.gob.ar
+    modos: [mareas, tablas_marea, alertas_crecida]
+    organismos_permitidos: [SHN, Ministerio de Defensa]
+    temas_permitidos: [mareas, nivel_mar, alertas_crecida]
+    formatos: [pdf, csv]
+    campo_fecha_corte: anio tabla / fecha alerta
+    campo_unidad: metros
+    max_resultados: 5
+    cache_horas: 24
+    alcance_territorial: nacional
+    jurisdiccion: nacional
+    relacion: describe
+    estado: activo
+
+  - id: conae
+    tipo: rest
+    base: https://catalog.saocom.conae.gov.ar/catalog
+    alternativas: [https://geocatalogos.conae.gov.ar/geonetwork/srv/spa/catalog.search]
+    modos: [imagenes_satelitales, humedad_suelo, catalogo_saocom]
+    organismos_permitidos: [CONAE]
+    temas_permitidos: [satelital, SAOCOM, humedad_suelo, mineria, ambiente]
+    formatos: [geojson, tif, pdf]
+    campo_fecha_corte: fecha_adquisicion
+    campo_unidad: reflectancia / humedad_volumetrica
+    max_resultados: 5
+    cache_horas: 168
+    requiere_login: true
+    alcance_territorial: nacional
+    jurisdiccion: nacional
+    relacion: describe
+    estado: activo
+    nota: solo metadata publica; descargar SAOCOM requiere licencia fuera de la app
+
+  - id: sirgas
+    tipo: csv_directo
+    base: https://sirgas.ipgh.org
+    alternativas: [https://www.sirgas.org]
+    modos: [estaciones_gnss, coordenadas, marco_referencia]
+    organismos_permitidos: [SIRGAS, IAG, IPGH]
+    temas_permitidos: [geodesia, catastro, marco_referencia]
+    formatos: [csv, pdf, txt]
+    campo_fecha_corte: epoca de coordenada
+    campo_unidad: ITRF / metros
+    max_resultados: 5
+    cache_horas: 720
+    alcance_territorial: nacional
+    jurisdiccion: internacional
+    relacion: describe
+    estado: activo
+
+  # ---------------------------------------------------------------------------
+  # DOCUMENTOS / INSTITUCIONAL (solo titulo + organismo + fecha + link)
+  # ---------------------------------------------------------------------------
+  - id: ministerio_defensa
+    tipo: listado_pdf
+    base: https://www.argentina.gob.ar/defensa
+    modos: [listado_pdf]
+    temas_permitidos: [defensa]
+    campo_fecha_corte: fecha_publicacion
+    max_resultados: 5
+    cache_horas: 720
+    alcance_territorial: nacional
+    jurisdiccion: nacional
+    relacion: regula
+    estado: activo
+
+  - id: citedef
+    tipo: listado_pdf
+    base: https://www.argentina.gob.ar/defensa/citedef
+    modos: [listado_pdf]
+    temas_permitidos: [defensa, tecnologia]
+    campo_fecha_corte: fecha_publicacion
+    max_resultados: 5
+    cache_horas: 720
+    alcance_territorial: nacional
+    jurisdiccion: nacional
+    relacion: describe
+    estado: activo
+
+  - id: mincyt
+    tipo: ckan
+    base: https://datos.gob.ar/api/3/action
+    modos: [package_search]
+    organismos_permitidos: [MINCYT, Secretaria de Innovacion Ciencia y Tecnologia]
+    temas_permitidos: [ciencia, tecnologia]
+    campo_fecha_corte: metadata_modified
+    max_resultados: 5
+    cache_horas: 720
+    alcance_territorial: nacional
+    jurisdiccion: nacional
+    relacion: describe
+    estado: activo
+
+  - id: undef
+    tipo: listado_pdf
+    base: https://www.undef.edu.ar
+    modos: [listado_pdf]
+    temas_permitidos: [educacion, defensa]
+    campo_fecha_corte: fecha_publicacion
+    max_resultados: 5
+    cache_horas: 720
+    alcance_territorial: nacional
+    jurisdiccion: nacional
+    relacion: describe
+    estado: activo
+
+  - id: ipgh
+    tipo: listado_pdf
+    base: https://www.ipgh.org
+    modos: [listado_pdf]
+    organismos_permitidos: [IPGH, OEA]
+    temas_permitidos: [geografia, cartografia]
+    campo_fecha_corte: fecha_publicacion
+    max_resultados: 5
+    cache_horas: 720
+    alcance_territorial: internacional
+    jurisdiccion: internacional
+    relacion: describe
+    estado: activo
+
+  - id: un_ggim
+    tipo: listado_pdf
+    base: https://ggim.un.org
+    modos: [listado_pdf, sesiones_comite]
+    temas_permitidos: [estandares_geoespaciales, IGIF]
+    campo_fecha_corte: fecha_sesion
+    max_resultados: 5
+    cache_horas: 720
+    alcance_territorial: internacional
+    jurisdiccion: internacional
+    relacion: describe
+    estado: activo
+
+  - id: un_ggim_americas
+    tipo: listado_pdf
+    base: https://www.un-ggim-americas.org
+    modos: [listado_pdf]
+    temas_permitidos: [estandares_geoespaciales, americas]
+    campo_fecha_corte: fecha_publicacion
+    max_resultados: 5
+    cache_horas: 720
+    alcance_territorial: internacional
+    jurisdiccion: internacional
+    relacion: describe
+    estado: activo
+
+  - id: un_ggrf
+    tipo: listado_pdf
+    base: https://ggim.un.org
+    modos: [listado_pdf]
+    temas_permitidos: [marco_referencia_geodesico_global]
+    campo_fecha_corte: fecha_publicacion
+    max_resultados: 5
+    cache_horas: 720
+    alcance_territorial: internacional
+    jurisdiccion: internacional
+    relacion: describe
+    estado: activo
+
+  - id: iugc_cafa_cfc
+    tipo: sin_api
+    base: https://www.argentina.gob.ar/defensa
+    modos: [busqueda_via_argentina_gob_ar, busqueda_via_boletin_oficial]
+    temas_permitidos: [cartografia, defensa]
+    campo_fecha_corte: fecha_publicacion
+    max_resultados: 5
+    cache_horas: 720
+    alcance_territorial: nacional
+    jurisdiccion: nacional
+    relacion: describe
+    estado: activo
+    nota: sin portal unico. No inventar dominio.
+
+  # ---------------------------------------------------------------------------
+  # CAPA SALTA — dominios exactos, NO normalizar .gob.ar / .gov.ar
+  # ---------------------------------------------------------------------------
+  - id: idesa_salta
+    tipo: wms_wfs
+    base: https://geoportal.salta.gob.ar
+    alternativas: [https://idesa.salta.gob.ar, https://geoportal.idesa.gob.ar, https://mapas.salta.gob.ar]
+    modos: [GetCapabilities, GetMap, GetFeature, busqueda_catalogo_geonode]
+    organismos_permitidos: [IDESA, Direccion General de Inmuebles, Secretaria de Mineria, Gobierno de Salta]
+    temas_permitidos: [catastro, red_vial, planeamiento_catastral, ambiente, transporte, mineria, sociedad]
+    formatos: [geojson, wms, wfs]
+    campo_fecha_corte: metadato de capa
+    campo_unidad: segun capa / EPSG:4326
+    max_resultados: 5
+    cache_horas: 168
+    alcance_territorial: provincia_salta
+    jurisdiccion: provincia_salta
+    relacion: describe
+    estado: activo
+    nota: buscar ACA primero para Salta, no en IGN nacional. Sin http.
+
+  - id: inmuebles_salta
+    tipo: listado_pdf
+    base: https://www.inmuebles.gov.ar
+    base_geoportal: https://geoportal.salta.gob.ar
+    modos: [consulta_catastro, consulta_nomenclatura, consulta_plano]
+    organismos_permitidos: [Direccion General de Inmuebles, Secretaria General de la Gobernacion]
+    temas_permitidos: [catastro, nomenclatura_catastral, valuacion_fiscal, planos]
+    formatos: [html, pdf]
+    campo_fecha_corte: fecha de capa / version catastro
+    campo_unidad: m2 / pesos
+    max_resultados: 5
+    cache_horas: 720
+    pdf_escaneado: false
+    alcance_territorial: provincia_salta
+    jurisdiccion: provincia_salta
+    relacion: describe
+    estado: activo
+    advertencia_legal: cartografia orientativa, NO aprobatoria de plano
+    nota_privacidad: nunca guardar titular/DNI; solo capa geometrica y nomenclatura publica
+    requiere_login: false
+
+  - id: catastro_minero_salta
+    tipo: wms_wfs
+    base: https://geoportal.salta.gob.ar
+    alternativas: [https://cima.minem.gob.ar]
+    modos: [catastro_minero, minas, canteras, peticiones_mensura]
+    organismos_permitidos: [Secretaria de Mineria y Energia de Salta, Secretaria de Mineria de Nacion]
+    temas_permitidos: [mineria, catastro_minero, mensura]
+    formatos: [geojson, wms, wfs]
+    campo_fecha_corte: metadato de capa
+    campo_unidad: hectareas
+    max_resultados: 5
+    cache_horas: 720
+    alcance_territorial: provincia_salta
+    jurisdiccion: provincia_salta
+    relacion: interseca
+    estado: activo
+    nota: canonicalizado a geoportal.salta.gob.ar (antes geoportal.idesa.gob.ar)
+
+  - id: boletin_oficial_salta
+    tipo: listado_pdf
+    base: https://boletinoficialsalta.gob.ar
+    modos: [busqueda_avanzada, edicion_dia, secciones, ley_presupuesto]
+    organismos_permitidos: [Direccion General de Boletin Oficial, Secretaria General de la Gobernacion]
+    temas_permitidos: [decretos, resoluciones, avisos_oficiales, presupuesto]
+    formatos: [pdf]
+    campo_fecha_corte: fecha publicacion + N de Boletin
+    campo_unidad: no_aplica
+    max_resultados: 5
+    cache_horas: 24
+    pdf_escaneado: true
+    alcance_territorial: provincia_salta
+    jurisdiccion: provincia_salta
+    relacion: regula
+    estado: activo
+    nota: incluye el modo presupuesto_salta (no crear conector separado con la misma base)
+
+  - id: estadisticas_salta
+    tipo: listado_pdf
+    base: https://estadisticas.salta.gov.ar
+    modos: [anuario, exportaciones, EPH, actividad_economica, empleo_minero]
+    organismos_permitidos: [Direccion General de Estadisticas y Censo, INDEC]
+    temas_permitidos: [poblacion, EPH, exportaciones, empleo_minero]
+    formatos: [pdf, xlsx, csv]
+    campo_fecha_corte: fecha del informe
+    campo_unidad: dolares FOB / personas / porcentaje
+    max_resultados: 5
+    cache_horas: 720
+    alcance_territorial: provincia_salta
+    jurisdiccion: provincia_salta
+    relacion: describe
+    estado: activo
+
+  - id: salta_compra
+    tipo: rest
+    base: https://saltacompra.gob.ar
+    alternativas: [https://compras.salta.gob.ar]
+    modos: [licitaciones, contrataciones, busqueda_publicacion]
+    organismos_permitidos: [Secretaria de Procedimientos de Contrataciones, Gobierno de Salta]
+    temas_permitidos: [compras_publicas_salta, proveedores, pliegos]
+    formatos: [html, pdf]
+    campo_fecha_corte: fecha_publicacion
+    campo_unidad: pesos
+    max_resultados: 5
+    cache_horas: 24
+    requiere_login: false
+    alcance_territorial: provincia_salta
+    jurisdiccion: provincia_salta
+    relacion: regula
+    estado: activo
+    nota: NO confundir con comprar_ar nacional
+
+  - id: dgr_salta
+    tipo: listado_pdf
+    base: https://www.dgrsalta.gov.ar
+    modos: [resoluciones_generales, oficina_virtual, padrones]
+    organismos_permitidos: [Direccion General de Rentas, Ministerio de Economia y Servicios Publicos]
+    temas_permitidos: [ingresos_brutos, impuestos_provinciales, resoluciones]
+    formatos: [pdf, html]
+    campo_fecha_corte: fecha Resolucion General
+    campo_unidad: pesos / alicuota
+    max_resultados: 5
+    cache_horas: 720
+    requiere_login: false
+    alcance_territorial: provincia_salta
+    jurisdiccion: provincia_salta
+    relacion: regula
+    estado: activo
+    nota: solo normativa publica. Nunca clave fiscal.
+
+  - id: obras_salta
+    tipo: rest
+    base: https://obras.salta.gob.ar
+    modos: [busqueda_obras, ficha_obra]
+    organismos_permitidos: [Gobierno de Salta, Ministerio de Infraestructura]
+    temas_permitidos: [obra_publica, vivienda, agua_saneamiento, vial, alumbrado]
+    formatos: [html, json]
+    campo_fecha_corte: fecha actualizacion ficha / etapa
+    campo_unidad: pesos / porcentaje avance
+    max_resultados: 5
+    cache_horas: 168
+    alcance_territorial: provincia_salta
+    jurisdiccion: provincia_salta
+    relacion: describe
+    estado: activo
+    nota: consultable por departamento
+
+  - id: idemsa
+    tipo: wms_wfs
+    base: https://idemsa.municipalidadsalta.gob.ar
+    alternativas: [https://geo.municipalidadsalta.gob.ar]
+    modos: [mapas_tematicos, datos_abiertos, wms, wfs]
+    organismos_permitidos: [Municipalidad de Salta, Observatorio de la Ciudad]
+    temas_permitidos: [barrios, codigo_planeamiento_urbano, obras_privadas, ciclovias]
+    formatos: [geojson, wms, wfs]
+    campo_fecha_corte: metadato de capa
+    campo_unidad: segun capa
+    max_resultados: 5
+    cache_horas: 168
+    alcance_territorial: municipio_salta_capital
+    jurisdiccion: municipio_salta_capital
+    relacion: describe
+    estado: activo
+    advertencia_legal: orientativo, no aprobatorio de plano
+    nota: NO cubre San Jose de los Cerrillos ni La Merced
+
+  - id: salta_3d
+    tipo: rest
+    base: https://salta3d.municipalidadsalta.gob.ar
+    modos: [consulta_por_catastro, consulta_por_direccion]
+    organismos_permitidos: [Municipalidad de Salta, Secretaria de Desarrollo Urbano]
+    temas_permitidos: [uso_suelo, construccion_permitida, codigo_urbano]
+    formatos: [html, json]
+    campo_fecha_corte: fecha norma urbana vigente
+    campo_unidad: m2 / FOS / FOT
+    max_resultados: 5
+    cache_horas: 720
+    alcance_territorial: municipio_salta_capital
+    jurisdiccion: municipio_salta_capital
+    relacion: regula
+    estado: activo
+    advertencia_legal: orientativo, no reemplaza verificacion tecnica municipal
+    nota: NO cubre los municipios de Cerrillos
+
+  - id: datos_publicos_inteligentes_salta
+    tipo: rest
+    base: null
+    modos: [busqueda_tematica, descarga_datos]
+    organismos_permitidos: [Secretaria de Modernizacion y Servicios Publicos, Gobierno de Salta]
+    temas_permitidos: [educacion, salud, economia, produccion, seguridad]
+    max_resultados: 5
+    cache_horas: 24
+    alcance_territorial: provincia_salta
+    jurisdiccion: provincia_salta
+    relacion: describe
+    estado: pendiente_lanzamiento
+    verificado_el: null
+    nota: anuncio 19-11-2026 no verificado al 18-11-2026. NO inventar dominio.
+
+  - id: boletin_municipal_salta
+    tipo: rest
+    base: https://municipalidadsalta.gob.ar/wp-json/wp/v2
+    modos: [boletin]
+    organismos_permitidos: [Municipalidad de Salta]
+    temas_permitidos: [boletin, normativa_municipal]
+    formatos: [json, pdf]
+    campo_fecha_corte: date
+    campo_unidad: no_aplica
+    max_resultados: 5
+    cache_horas: 24
+    pdf_escaneado: false
+    alcance_territorial: municipio_salta_capital
+    jurisdiccion: municipio_salta_capital
+    relacion: regula
+    estado: activo
+    nota: distinto de boletin_oficial_salta (provincia) y boletin_oficial (nacion)
+

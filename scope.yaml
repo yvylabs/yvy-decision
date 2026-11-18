@@ -1,0 +1,33 @@
+# Alcance del piloto. El recorte lo hace el runner, nunca a mano.
+version: 1
+alcance:
+  nombre: Cerrillos
+  provincia: Salta
+  departamento_id_oficial: "166035"
+  municipios:
+    - nombre: San José de los Cerrillos
+      id_catalogo_actual: 1660077
+    - nombre: La Merced
+      id_catalogo_actual: 1660084
+
+geometria_limite:
+  fuente: idesa_salta
+  capa: departamentos
+  id: "166035"
+
+estrategias:
+  radios_censales: unidades_completas   # NUNCA cortar un radio
+  localidades: unidades_completas
+  buildup_2023: clip
+  barrios_derivados: clip
+  red_vial: clip
+  concesiones: interseca
+  obras_publicas: filtro_por_departamento
+  boletines: filtro_por_jurisdiccion_y_fecha
+
+reglas:
+  - un radio nunca se parte por un barrio
+  - si un radio cruza el limite se conserva entero y se marca cruza_limite=true
+  - el original nacional/provincial queda intacto con su sha256 en R2
+  - el derivado lleva metodo, capa, srid y hash_derivado
+  - idemsa y salta_3d NO se usan: cubren solo Municipalidad de Salta Capital

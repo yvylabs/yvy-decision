@@ -1,0 +1,73 @@
+# Ontología del motor. Declara hechos, relaciones y procedencia permitida.
+version: 1
+
+relaciones:
+  describe: hecho que da valor a otro
+  pertenece: jerarquia administrativa (unidad completa)
+  interseca: relacion N:M (ej. cuenca con municipio)
+  regula: normativa/documento que condiciona la decision
+
+hechos:
+  poblacion_radio:
+    etiqueta: Población por radio censal
+    unidad: habitantes
+    nivel: radio_censal
+    procedencia_permitida: [oficial]
+    fuentes: [radios_indec_2022]
+    regla: unidad_completa_nunca_cortar
+
+  poblacion_barrio:
+    etiqueta: Población por barrio (estimada)
+    unidad: habitantes
+    nivel: barrio
+    procedencia_permitida: [estimado]
+    fuentes: [poblacion_barrio_estimada]
+    requiere: [radios_indec_2022, buildup_2023, barrios_cerrillos]
+    no_oficial: true
+    control: suma_por_radio_igual_a_oficial
+    usos_permitidos: [priorizar, recomendar_busqueda]
+    usos_prohibidos: [informe_oficial, auditoria, licitacion]
+
+  establecimientos_educativos:
+    etiqueta: Escuelas con coordenadas y matrícula
+    unidad: establecimientos
+    nivel: establecimiento
+    procedencia_permitida: [oficial]
+    fuentes: [datos_gob_ar, estadisticas_salta]
+    campos_requeridos: [id, lat, lon, matricula, fecha_corte]
+
+  red_vial:
+    etiqueta: Red vial por departamento
+    unidad: km
+    nivel: via
+    procedencia_permitida: [oficial]
+    fuentes: [idesa_salta]
+    geometria: LineString
+    relacion: interseca
+
+  concesiones_mineras:
+    etiqueta: Concesiones mineras vigentes
+    unidad: hectareas
+    nivel: concesion
+    procedencia_permitida: [oficial]
+    fuentes: [catastro_minero_salta]
+    geometria: Polygon
+    relacion: interseca
+    advertencia: sin geometria no es usable para habilitar
+
+  normativa:
+    etiqueta: Norma que regula una decision
+    unidad: no_aplica
+    nivel: documento
+    procedencia_permitida: [oficial]
+    fuentes: [boletin_oficial, boletin_oficial_salta, boletin_municipal_salta]
+    relacion: regula
+    pdf_escaneado_requiere_curaduria: true
+
+  obras_publicas:
+    etiqueta: Obras publicas por departamento
+    unidad: pesos
+    nivel: obra
+    procedencia_permitida: [oficial]
+    fuentes: [obras_salta]
+    filtro: departamento

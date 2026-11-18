@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.pyc
+datos/*.gpkg
+datos/*.pdf
+datos/*.xlsx
+datos/*.csv

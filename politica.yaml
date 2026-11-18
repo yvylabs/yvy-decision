@@ -1,0 +1,90 @@
+# Política de decisión. Define validez, precedencia, abstención y recomendaciones.
+version: 1
+
+estados_decidibles:
+  ok: decidible
+  abstain: no_decidible
+  forced: decidible   # check duro falló: decisión operativa "no", con motivo verificable
+
+aceptacion:
+  requiere:
+    - fuente_en_allowlist
+    - organismo_declarado
+    - fecha_corte_presente
+    - unidad_presente
+    - url_original_presente
+    - sha256_calculable
+  edad_maxima_meses: 24
+  si_falta_alguno: no_usar_para_decidir
+
+precedencia_por_hecho:
+  poblacion:
+    - INDEC / radios censales (oficial)
+    - DGE Salta (oficial provincial, solo agregados)
+    - Yvy Labs estimada (no oficial, solo priorizar)
+  geometria_administrativa:
+    - IDESA / IGN (oficial)
+    - Inmuebles DGI (orientativa, aviso obligatorio)
+    - Salta 3D (orientativa, solo Capital)
+  normativa:
+    - jerarquia_por_jurisdiccion   # nacion / provincia / municipio
+  compras:
+    - por_jurisdiccion             # COMPR.AR nacional / SaltaCompra provincial
+  mineria:
+    - IDESA + CIMA (oficial)
+    - Secretaria de Mineria de Salta (oficial)
+
+conflictos:
+  accion: declarar_y_bajar_confianza
+  resolver_automaticamente: false
+  si_dos_fuentes_oficiales_discrepan: abstener
+  registrar: [ids_fuente, valores, fechas, hashes, motivo]
+
+umbrales:
+  confianza_minima_para_decidir: 0.65
+  confianza_minima_para_priorizar: 0.45
+  si_confianza_null: recomendar_buscar_o_generar
+
+humano_requerido_cuando:
+  - fuente_descubierta_fuera_de_allowlist
+  - sha256_cambio_respector_al_pin
+  - conflicto_entre_fuentes_oficiales
+  - extraccion_pdf_ruidosa_o_escaneada
+  - decision_con_consecuencia_legal_o_financiera
+  - dato_nominal_o_clave_fiscal
+
+recomendaciones:
+  sin_fuente_oficial_encontrada:
+    motivo: sin_fuente_oficial_encontrada
+    texto: >-
+      No hay fuente oficial ENCONTRADA para este dato.
+      Es posible generar una estimación basada en fuentes científicas
+      pero NO oficiales.
+    acciones: [ver_metodo, generar_estimacion, no_usar]
+  fuente_oficial_pinneada_cambio_hash:
+    motivo: hash_no_coincide
+    texto: "La fuente oficial cambió desde la última decisión. No se usa hasta verificar."
+    acciones: [revisar_fuente, aceptar_nuevo_hash, rechazar]
+  extraccion_dudosa:
+    motivo: extraccion_no_confiable
+    texto: "El PDF se extrajo con baja confianza. No se usa para decidir."
+    acciones: [solicitar_curaduria, descartar]
+  conflicto:
+    motivo: conflicto_entre_fuentes_oficiales
+    texto: "Dos fuentes oficiales discrepan. Se requiere decisión humana."
+    acciones: [elegir_fuente, abstener]
+
+ui_obligatoria:
+  - Fuente Oficial
+  - Organismo
+  - Fecha de corte
+  - Unidad
+  - Ver fuente original
+  - Aviso orientativo si Inmuebles / Salta 3D / dato generado
+
+prohibido:
+  - pedir CUIT o Clave Fiscal
+  - guardar datos nominales de titulares
+  - usar url fuera de allowlist
+  - presentar dato generado como oficial
+  - partir un radio censal por barrio

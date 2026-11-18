@@ -1,0 +1,45 @@
+# Preguntas de decisión del piloto Cerrillos.
+# Ninguna pregunta es "mostrame el mapa" ni "explorá el catálogo".
+version: 1
+contexto:
+  provincia: Salta
+  departamento: Cerrillos
+  municipios: [San José de los Cerrillos, La Merced]
+
+preguntas:
+  - id: priorizar_intervencion
+    texto: ¿Puedo priorizar dónde intervenir en los dos municipios con la evidencia disponible?
+    requiere: [poblacion_barrio, establecimientos_educativos, red_vial]
+    reglas_duras:
+      - sin_coordenadas_no_se_prioriza
+      - control_por_radio_debe_cerrar
+    si_si: ranking de zonas por brecha con confianza declarada
+    si_no: lista de fuentes que faltan para poder rankear
+
+  - id: publicar_poblacion_barrio
+    texto: ¿Puedo publicar la población por barrio como dato oficial?
+    requiere: [poblacion_radio]
+    procedencia_exigida: oficial
+    nivel_exigido: barrio
+    reglas_duras:
+      - barrio_no_es_unidad_estadistica_indec
+    si_si: nunca con dato generado
+    si_no: usar radio censal o rotular como estimación Yvy Labs
+
+  - id: inversion_educativa
+    texto: ¿Puedo justificar inversión en infraestructura educativa en San José de los Cerrillos vs La Merced?
+    requiere: [establecimientos_educativos, poblacion_barrio]
+    reglas_duras:
+      - escuelas_con_coordenadas_y_matricula
+      - matrícula_con_corte_reciente
+    si_si: comparación por brecha con escuelas y matrícula
+    si_no: pedir fuente oficial al Ministerio de Educación
+
+  - id: zona_libre_de_mineria
+    texto: ¿Puedo afirmar que una zona de Cerrillos está libre de concesiones mineras antes de habilitar un proyecto?
+    requiere: [concesiones_mineras]
+    reglas_duras:
+      - concesion_sin_geometria_no_prueba_ausencia
+    si_si: dictamen con polígonos vigentes y fecha
+    si_no: pedir GeoJSON de concesiones a IDESA / Secretaría de Minería
+

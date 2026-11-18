@@ -1,0 +1,144 @@
+{
+  "schema": "yvy-decision-v1",
+  "generado": "2026-11-18T19:10:18+00:00",
+  "alcance": {
+    "nombre": "Cerrillos",
+    "provincia": "Salta",
+    "departamento_id_oficial": "166035",
+    "municipios": [
+      {
+        "nombre": "San José de los Cerrillos",
+        "id_catalogo_actual": 1660077
+      },
+      {
+        "nombre": "La Merced",
+        "id_catalogo_actual": 1660084
+      }
+    ]
+  },
+  "motor": "determinista_poc",
+  "decisiones": [
+    {
+      "pregunta_id": "priorizar_intervencion",
+      "pregunta": "¿Puedo priorizar dónde intervenir en los dos municipios con la evidencia disponible?",
+      "status": "abstain",
+      "puede_decidir": false,
+      "motivo": "sin_fuente_oficial_encontrada",
+      "confianza": null,
+      "faltan": [
+        {
+          "hecho": "poblacion_barrio",
+          "fuente": "poblacion_barrio_estimada",
+          "por_que": "sin_fuente_oficial_encontrada"
+        },
+        {
+          "hecho": "establecimientos_educativos",
+          "fuente": "datos_gob_ar",
+          "por_que": "sin_fuente_oficial_encontrada"
+        },
+        {
+          "hecho": "red_vial",
+          "fuente": "idesa_salta",
+          "por_que": "sin_fuente_oficial_encontrada"
+        }
+      ],
+      "fuentes_usadas": [],
+      "recomendacion": {
+        "tipo": "buscar_fuente",
+        "texto": "No hay fuente oficial ENCONTRADA. Buscar en el allowlist o solicitar dato.",
+        "acciones": [
+          "buscar_fuente",
+          "solicitar_curaduria"
+        ]
+      },
+      "accion_si": "ranking de zonas por brecha con confianza declarada",
+      "accion_no": "lista de fuentes que faltan para poder rankear"
+    },
+    {
+      "pregunta_id": "publicar_poblacion_barrio",
+      "pregunta": "¿Puedo publicar la población por barrio como dato oficial?",
+      "status": "abstain",
+      "puede_decidir": false,
+      "motivo": "sin_fuente_oficial_encontrada",
+      "confianza": null,
+      "faltan": [
+        {
+          "hecho": "poblacion_radio",
+          "fuente": "radios_indec_2022",
+          "por_que": "sin_fuente_oficial_encontrada"
+        }
+      ],
+      "fuentes_usadas": [],
+      "recomendacion": {
+        "tipo": "buscar_fuente",
+        "texto": "No hay fuente oficial ENCONTRADA. Buscar en el allowlist o solicitar dato.",
+        "acciones": [
+          "buscar_fuente",
+          "solicitar_curaduria"
+        ]
+      },
+      "accion_si": "nunca con dato generado",
+      "accion_no": "usar radio censal o rotular como estimación Yvy Labs"
+    },
+    {
+      "pregunta_id": "inversion_educativa",
+      "pregunta": "¿Puedo justificar inversión en infraestructura educativa en San José de los Cerrillos vs La Merced?",
+      "status": "abstain",
+      "puede_decidir": false,
+      "motivo": "sin_fuente_oficial_encontrada",
+      "confianza": null,
+      "faltan": [
+        {
+          "hecho": "establecimientos_educativos",
+          "fuente": "datos_gob_ar",
+          "por_que": "sin_fuente_oficial_encontrada"
+        },
+        {
+          "hecho": "poblacion_barrio",
+          "fuente": "poblacion_barrio_estimada",
+          "por_que": "sin_fuente_oficial_encontrada"
+        }
+      ],
+      "fuentes_usadas": [],
+      "recomendacion": {
+        "tipo": "buscar_fuente",
+        "texto": "No hay fuente oficial ENCONTRADA. Buscar en el allowlist o solicitar dato.",
+        "acciones": [
+          "buscar_fuente",
+          "solicitar_curaduria"
+        ]
+      },
+      "accion_si": "comparación por brecha con escuelas y matrícula",
+      "accion_no": "pedir fuente oficial al Ministerio de Educación"
+    },
+    {
+      "pregunta_id": "zona_libre_de_mineria",
+      "pregunta": "¿Puedo afirmar que una zona de Cerrillos está libre de concesiones mineras antes de habilitar un proyecto?",
+      "status": "abstain",
+      "puede_decidir": false,
+      "motivo": "sin_fuente_oficial_encontrada",
+      "confianza": null,
+      "faltan": [
+        {
+          "hecho": "concesiones_mineras",
+          "fuente": "catastro_minero_salta",
+          "por_que": "sin_fuente_oficial_encontrada"
+        }
+      ],
+      "fuentes_usadas": [],
+      "recomendacion": {
+        "tipo": "buscar_fuente",
+        "texto": "No hay fuente oficial ENCONTRADA. Buscar en el allowlist o solicitar dato.",
+        "acciones": [
+          "buscar_fuente",
+          "solicitar_curaduria"
+        ]
+      },
+      "accion_si": "dictamen con polígonos vigentes y fecha",
+      "accion_no": "pedir GeoJSON de concesiones a IDESA / Secretaría de Minería"
+    }
+  ],
+  "hash": "c1d343ef1898998caa7745046977019e225db2d14424143132b92fde86e7cb44",
+  "canonico": "RFC8785-like",
+  "algoritmo": "sha256"
+}

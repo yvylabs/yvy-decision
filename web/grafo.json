@@ -1,0 +1,77 @@
+{
+  "nodos": [
+    {
+      "id": "pregunta:priorizar_intervencion",
+      "tipo": "pregunta"
+    },
+    {
+      "id": "pregunta:publicar_poblacion_barrio",
+      "tipo": "pregunta"
+    },
+    {
+      "id": "pregunta:inversion_educativa",
+      "tipo": "pregunta"
+    },
+    {
+      "id": "pregunta:zona_libre_de_mineria",
+      "tipo": "pregunta"
+    },
+    {
+      "id": "faltante:poblacion_barrio_estimada",
+      "tipo": "faltante"
+    },
+    {
+      "id": "faltante:datos_gob_ar",
+      "tipo": "faltante"
+    },
+    {
+      "id": "faltante:idesa_salta",
+      "tipo": "faltante"
+    },
+    {
+      "id": "faltante:radios_indec_2022",
+      "tipo": "faltante"
+    },
+    {
+      "id": "faltante:catastro_minero_salta",
+      "tipo": "faltante"
+    }
+  ],
+  "aristas": [
+    {
+      "de": "faltante:poblacion_barrio_estimada",
+      "a": "pregunta:priorizar_intervencion",
+      "rel": "abstiene"
+    },
+    {
+      "de": "faltante:datos_gob_ar",
+      "a": "pregunta:priorizar_intervencion",
+      "rel": "abstiene"
+    },
+    {
+      "de": "faltante:idesa_salta",
+      "a": "pregunta:priorizar_intervencion",
+      "rel": "abstiene"
+    },
+    {
+      "de": "faltante:radios_indec_2022",
+      "a": "pregunta:publicar_poblacion_barrio",
+      "rel": "abstiene"
+    },
+    {
+      "de": "faltante:datos_gob_ar",
+      "a": "pregunta:inversion_educativa",
+      "rel": "abstiene"
+    },
+    {
+      "de": "faltante:poblacion_barrio_estimada",
+      "a": "pregunta:inversion_educativa",
+      "rel": "abstiene"
+    },
+    {
+      "de": "faltante:catastro_minero_salta",
+      "a": "pregunta:zona_libre_de_mineria",
+      "rel": "abstiene"
+    }
+  ]
+}

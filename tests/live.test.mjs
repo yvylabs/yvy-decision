@@ -2,6 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { consultarFuente, overlayDecisiones, urlPara } from '../worker/live.mjs';
 
+test('Pages Function /api/* expone onRequest', async () => {
+  const mod = await import('../web/functions/api/[[path]].js');
+  assert.equal(typeof mod.onRequest, 'function');
+});
+
+
 const fuente = (id, tipo, base) => ({ id, tipo, base, estado: 'activo' });
 
 test('urlPara arma la base del API, nunca la home', () => {

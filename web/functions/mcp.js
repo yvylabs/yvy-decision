@@ -1,0 +1,41 @@
+// MCP de solo lectura sobre decisiones.json + grafo.json (Pages Function /mcp).
+const TOOLS = [
+  { name: 'buscar_fuentes', description: 'Estado en vivo de las fuentes del allowlist' },
+  { name: 'decidir', description: 'Decisiones con motivo, confianza y recomendación' },
+  { name: 'ver_traza', description: 'Grafo generado y hash de la corrida' },
+];
+
+async function jsonDe(ruta, origin) {
+  return fetch(new URL(ruta, origin)).then((r) => {
+    if (!r.ok || !(r.headers.get('content-type') || '').includes('json')) return null;
+    return r.json();
+  }).catch(() => null);
+}
+
+export async function onRequest({ request, url }) {
+  if (request.method === 'GET') {
+    return Response.json({ schema: 'yvy-mcp-v1', tools: TOOLS, solo_lectura: true });
+  }
+  let body = {};
+  try { body = await request.json(); } catch { return Response.json({ error: 'json invalido' }, { status: 400 }); }
+
+  if (url.pathname.startsWith('/api/')) {
+    const { handleLive } = await import('./api/_live.mjs');
+    return handleLive(request);
+  }
+
+  const decisiones = await jsonDe('/decisiones.json', url.origin);
+  if (!decisiones) return Response.json({ error: 'decisiones.json no publicado' }, { status: 503 });
+  const nombre = body.params?.name || body.name;
+  if (nombre === 'decidir') return Response.json({ decisiones: decisiones.decisiones, hash: decisiones.hash });
+  if (nombre === 'ver_traza') {
+    const grafo = await jsonDe('/grafo.json', url.origin);
+    return Response.json({ grafo: grafo || { nodos: [], aristas: [] }, hash: decisiones.hash });
+  }
+  if (nombre === 'buscar_fuentes') {
+    const { estadoFuentes } = await import('./api/_live.mjs');
+    const f = await jsonDe('/fuentes.json', url.origin);
+    return Response.json({ estados: await estadoFuentes(f?.fuentes || [], body.q || '') });
+  }
+  return Response.json({ error: 'tool desconocida' }, { status: 400 });
+}

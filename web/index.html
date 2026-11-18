@@ -62,18 +62,28 @@ function pintar(d){
   }
 }
 
+async function jsonSeguro(url){
+  // Pages sirve index.html para rutas desconocidas: NO asumir que 200 es JSON.
+  const r = await fetch(url);
+  if(!r.ok) return null;
+  if(!(r.headers.get('content-type')||'').includes('json')) return null;
+  return r.json().catch(()=>null);
+}
+
 async function cargar(q=''){
   estado.textContent='Procesando: consultando sitios oficiales del allowlist…';
   try{
     const [dec, g] = await Promise.all([
-      fetch('/api/decisiones'+(q?'?q='+encodeURIComponent(q):'')).then(r=>r.ok?r.json():null),
-      fetch('/api/grafo').then(r=>r.ok?r.json():null).catch(()=>null)
+      jsonSeguro('/api/decisiones'+(q?'?q='+encodeURIComponent(q):'')),
+      jsonSeguro('/api/grafo')
     ]);
-    let payload = dec;
-    if(!payload) payload = await fetch('decisiones.json').then(r=>r.json());
-    if(g) grafo=g; else grafo=await fetch('grafo.json').then(r=>r.json()).catch(()=>({nodos:[],aristas:[]}));
+    const payload = dec || await jsonSeguro('decisiones.json');
+    if(!payload) throw new Error('no hay decisiones.json publicado');
+    grafo = g || await jsonSeguro('grafo.json') || {nodos:[],aristas:[]};
     pintar(payload);
-    estado.textContent = dec ? 'Consulta en vivo completada.' : 'Modo estático (Worker no disponible).';
+    estado.textContent = dec
+      ? 'Consulta en vivo completada · linaje verificado.'
+      : 'Modo estático (Pages Functions no disponibles). Linaje incluido.';
   }catch(e){
     estado.textContent='No se pudo consultar: '+e.message;
   }

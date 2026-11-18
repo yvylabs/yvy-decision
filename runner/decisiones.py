@@ -16,10 +16,48 @@ from __future__ import annotations
 
 import hashlib
 import json
+import urllib.parse
+import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
 import yaml
+
+def evidencias_idesa() -> dict:
+    """Descarga escuelas georreferenciadas de IDESA y devuelve evidencia sellada."""
+    base = "https://geoportal.salta.gob.ar/geoserver/ows"
+    params = {
+        "service": "WFS", "version": "1.0.0", "request": "GetFeature",
+        "typeName": "geonode:establecimientos_educativos",
+        "CQL_FILTER": "departamento='CERRILLOS'",
+        "outputFormat": "application/json",
+    }
+    url = base + "?" + urllib.parse.urlencode(params)
+    destino = WEB / "evidencias.json"
+    try:
+        with urllib.request.urlopen(url, timeout=25) as r:
+            crudo = r.read()
+        datos = json.loads(crudo)
+        features = datos.get("features") or []
+        escuelas = [f for f in features
+                    if str((f.get("properties") or {}).get("departamento", "")).upper() == "CERRILLOS"]
+        return {
+            "schema": "yvy-evidencia-v1",
+            "consultas": [{
+                "id": "escuelas_en_cerrillos",
+                "valor": len(escuelas),
+                "unidad": "establecimientos",
+                "fuente": "IDESA WFS · geonode:establecimientos_educativos",
+                "url_original": url,
+                "metodo": "GetFeature CQL_FILTER departamento='CERRILLOS'",
+                "fecha_corte": datetime.now(timezone.utc).date().isoformat(),
+                "sha256": hashlib.sha256(crudo).hexdigest(),
+            }],
+        }
+    except Exception:
+        if destino.exists():
+            return json.loads(destino.read_text(encoding="utf8"))
+        return {"schema": "yvy-evidencia-v1", "consultas": []}
 
 RAIZ = Path(__file__).resolve().parents[1]
 WEB = RAIZ / "web"
@@ -155,6 +193,7 @@ def main():
     preguntas = (cargar("preguntas.yaml") or {}).get("preguntas") or []
     politica = cargar("politica.yaml") or {}
     scope = cargar("scope.yaml") or {}
+    intenciones = cargar("intenciones.yaml") or {}
 
     idx = indice_fuentes(allow, generadas, fuentes_selladas())
     decisiones = [evaluar(p, ont, idx, politica, generadas) for p in preguntas]
@@ -208,6 +247,8 @@ def main():
         "recomendaciones": (politica.get("recomendaciones") or {}),
     }, ensure_ascii=False, indent=2) + "\n", encoding="utf8")
     (WEB / "ontologia.json").write_text(json.dumps(ont, ensure_ascii=False, indent=2) + "\n", encoding="utf8")
+    (WEB / "evidencias.json").write_text(json.dumps(evidencias_idesa(), ensure_ascii=False, indent=2) + "\n", encoding="utf8")
+    (WEB / "intenciones.json").write_text(json.dumps(intenciones, ensure_ascii=False, indent=2) + "\n", encoding="utf8")
 
     print(f"[yvy-decision] {len(decisiones)} preguntas · " +
           ", ".join(f"{d['pregunta_id']}={d['status']}" for d in decisiones))

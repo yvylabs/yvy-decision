@@ -1,0 +1,15 @@
+{
+  "schema": "yvy-evidencia-v1",
+  "consultas": [
+    {
+      "id": "escuelas_en_cerrillos",
+      "valor": 37,
+      "unidad": "establecimientos",
+      "fuente": "IDESA WFS · geonode:establecimientos_educativos",
+      "url_original": "https://geoportal.salta.gob.ar/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=geonode%3Aestablecimientos_educativos&CQL_FILTER=departamento%3D%27CERRILLOS%27&outputFormat=application%2Fjson",
+      "metodo": "GetFeature CQL_FILTER departamento='CERRILLOS'",
+      "fecha_corte": "2026-11-18",
+      "sha256": "45a405aa2eb3d5b4fc1322b66e1d81b065db54e12685720fb8b848aad395c312"
+    }
+  ]
+}

@@ -5,92 +5,96 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Yvy Decisión</title>
 <style>
-:root{--paper:#FAFAFA;--sheet:#fff;--line:#EAEAEA;--ink:#1A1A1A;--mute:#5A5A5A;--green:#0F5132;--sage:#F4F9F5;--warn:#B7791F;--red:#B42318}
+:root{--paper:#FAFAFA;--sheet:#fff;--line:#EAEAEA;--ink:#1A1A1A;--mute:#5A5A5A;--green:#0F5132;--sage:#F4F9F5;--warn:#B7791F}
 *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px Inter,system-ui,sans-serif;padding:40px 20px;display:flex;justify-content:center}
 main{width:min(940px,100%)}header{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:22px;display:flex;justify-content:space-between;align-items:center;gap:16px}
 h1{font:600 32px Georgia,serif;margin:0}.tag{font:600 11px Inter,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
-.buscar{display:flex;gap:8px;margin-bottom:18px}.buscar input{flex:1;padding:10px 12px;border:1px solid var(--line);border-radius:4px;font:14px Inter,sans-serif}
+.buscar{display:flex;gap:8px;margin-bottom:8px}.buscar input{flex:1;padding:10px 12px;border:1px solid var(--line);border-radius:4px;font:14px Inter,sans-serif}
 .buscar button{padding:10px 16px;border:1px solid var(--ink);background:var(--ink);color:#fff;border-radius:4px;cursor:pointer;font:500 13px Inter,sans-serif}
-.procesando{font:12px ui-monospace,monospace;color:var(--green);margin-bottom:14px;min-height:16px}
+.estado{font:12px ui-monospace,monospace;color:var(--green);margin:6px 0 18px;min-height:16px}
 .card{background:var(--sheet);border:1px solid var(--line);padding:22px;margin-bottom:14px}
-.q{font:500 19px Georgia,serif;margin:0 0 12px}
+.q{font:500 19px Georgia,serif;margin:0 0 12px}.valor{font:500 54px Georgia,serif;color:var(--green);line-height:1.1;margin:6px 0}
 .status{display:inline-block;padding:6px 10px;border-radius:3px;font:600 11px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase}
 .ok{background:var(--sage);color:var(--green)}.abstain{background:#FFF6E6;color:var(--warn)}.forced{background:#EEF2FF;color:#3730A3}
-.meta{font:11px ui-monospace,monospace;color:var(--mute);margin:11px 0;line-height:1.7}
+.evidencia{background:var(--sage);border-left:3px solid var(--green);padding:12px;margin-top:12px;font-size:13px;white-space:pre-line}
+.meta{font:11px ui-monospace,monospace;color:var(--mute);margin:11px 0;line-height:1.7;overflow-wrap:anywhere}
 .badge{display:inline-block;border:1px solid var(--line);padding:3px 7px;border-radius:3px;font:10px ui-monospace,monospace;color:var(--green);margin-right:5px}
-.badge.bad{color:var(--red);border-color:#F2C6C0}.rec{background:var(--sage);border-left:3px solid var(--green);padding:12px;margin-top:12px;font-size:13px;white-space:pre-line}
 details{margin-top:12px;font-size:13px}summary{cursor:pointer;color:var(--green)}details pre{font:11px ui-monospace,monospace;background:#F8F8F8;padding:10px;overflow:auto}
+.lista{font-size:13px;color:var(--mute)}.lista button{background:none;border:none;color:var(--green);cursor:pointer;padding:2px 0;font:inherit;text-align:left}
 </style>
 </head>
 <body><main>
 <header><div><h1>Yvy Decisión</h1><span class="tag">Cerrillos · Salta</span></div><span class="tag" id="hash">—</span></header>
 
 <div class="buscar">
-  <input id="q" placeholder="Buscar en fuentes oficiales (ej: educación, catastro, minería)">
-  <button id="btn">Consultar en vivo</button>
+  <input id="q" placeholder="Consultá: ¿cuántas escuelas hay en Cerrillos?">
+  <button id="btn">Consultar</button>
 </div>
-<div class="procesando" id="estado">Listo. Las decisiones se verifican contra los sitios oficiales del allowlist.</div>
+<div class="estado" id="estado">Base verificada cargada.</div>
 <div id="out">cargando decisiones…</div>
 
 <script>
-let grafo = {nodos:[],aristas:[]};
-const out = document.getElementById('out');
-const estado = document.getElementById('estado');
-
-function badge(texto, bad){ return `<span class="badge${bad?' bad':''}">${texto}</span>`; }
-
-function pintar(d){
-  document.getElementById('hash').textContent = d.hash ? d.hash.slice(0,12)+'…' : (d.linaje?.hash_estatico||'').slice(0,12)+'…';
-  out.innerHTML='';
-  for(const x of d.decisiones||[]){
-    const c=document.createElement('article'); c.className='card';
-    const caidas = x.sitios_no_disponibles||[];
-    const rec = x.recomendacion_viva||x.recomendacion||{};
-    const vivas = x.fuentes_vivas||[];
-    c.innerHTML=`<p class="q">${x.pregunta||x.pregunta_id}</p>
-      <span class="status ${x.status}">${x.status}${x.puede_decidir?' · decide':' · no decide'}</span>
-      <div class="meta">
-        ${vivas.map(v=>badge(v.estado==='no_disponible'?'Sitio no disponible':v.estado+': '+v.id, v.estado==='no_disponible')).join('')}
-        ${(x.faltan||[]).map(f=>badge('Falta: '+f.hecho,true)).join('')}
-      </div>
-      ${caidas.length?`<div class="rec">Sitio web oficial NO DISPONIBLE: ${caidas.join(', ')}. No es falta de dato: no pudimos verificar la fuente.</div>`:''}
-      ${rec.texto?`<div class="rec">${rec.texto}</div>`:''}
-      ${x.motivo?`<div class="meta">motivo: ${x.motivo}</div>`:''}
-      <div class="meta">${x.status==='abstain'?(x.accion_no||''):(x.accion_si||'')}</div>
-      <details><summary>Ver linaje (${grafo.nodos.length} nodos)</summary><pre>${JSON.stringify({nodos:grafo.nodos,aristas:grafo.aristas},null,2)}</pre></details>`;
-    out.appendChild(c);
-  }
-}
+let grafo={nodos:[],aristas:[]};
+const out=document.getElementById('out'), estado=document.getElementById('estado');
 
 async function jsonSeguro(url){
-  // Pages sirve index.html para rutas desconocidas: NO asumir que 200 es JSON.
-  const r = await fetch(url);
-  if(!r.ok) return null;
+  const r=await fetch(url); if(!r.ok) return null;
   if(!(r.headers.get('content-type')||'').includes('json')) return null;
   return r.json().catch(()=>null);
 }
-
-async function cargar(q=''){
-  estado.textContent='Procesando: consultando sitios oficiales del allowlist…';
-  try{
-    const [dec, g] = await Promise.all([
-      jsonSeguro('/api/decisiones'+(q?'?q='+encodeURIComponent(q):'')),
-      jsonSeguro('/api/grafo')
-    ]);
-    const payload = dec || await jsonSeguro('decisiones.json');
-    if(!payload) throw new Error('no hay decisiones.json publicado');
-    grafo = g || await jsonSeguro('grafo.json') || {nodos:[],aristas:[]};
-    pintar(payload);
-    estado.textContent = dec
-      ? 'Consulta en vivo completada · linaje verificado.'
-      : 'Modo estático (Pages Functions no disponibles). Linaje incluido.';
-  }catch(e){
-    estado.textContent='No se pudo consultar: '+e.message;
-  }
+function badge(t){return `<span class="badge">${t}</span>`;}
+function tarjetaDec(d){
+  return `<article class="card"><p class="q">${d.pregunta||d.pregunta_id}</p>
+    <span class="status ${d.status}">${d.status}${d.puede_decidir?' · decide':' · no decide'}</span>
+    <div class="meta">${(d.fuentes_usadas||[]).map(badge).join('')}${(d.faltan||[]).map(x=>badge('Falta: '+x.hecho)).join('')}</div>
+    ${d.motivo?`<div class="meta">motivo: ${d.motivo}</div>`:''}
+    ${d.recomendacion?.texto?`<div class="evidencia">${d.recomendacion.texto}</div>`:''}
+    <div class="meta">${d.status==='abstain'?(d.accion_no||''):(d.accion_si||'')}</div></article>`;
+}
+function tarjetaEvidencia(e){
+  return `<article class="card"><p class="q">${e.id.replaceAll('_',' ')}</p>
+    <div class="valor">${e.valor} <span style="font-size:14px">${e.unidad||''}</span></div>
+    <div class="meta">${badge(e.fuente)}${badge('corte '+e.fecha_corte)}${badge('sha256 '+e.sha256.slice(0,12))}</div>
+    <div class="evidencia">Método: ${e.metodo}</div>
+    <div class="meta">Fuente original: <a href="${e.url_original}" target="_blank" rel="noopener">ver en el sitio oficial</a></div></article>`;
+}
+function sinMatch(res){
+  const items=(res.disponibles||[]).map(x=>`<div><button data-id="${x.id}" data-tipo="${x.tipo}">${x.texto||x.id}</button></div>`).join('');
+  return `<article class="card"><p class="q">Sin respuesta registrada</p><div class="evidencia">${res.texto}</div><div class="lista">${items}</div></article>`;
+}
+function conGrafo(html){
+  return html+`<details><summary>Ver linaje (${grafo.nodos.length} nodos)</summary><pre>${JSON.stringify(grafo,null,2)}</pre></details>`;
 }
 
-document.getElementById('btn').onclick=()=>cargar(document.getElementById('q').value.trim());
-document.getElementById('q').addEventListener('keydown',e=>{if(e.key==='Enter')cargar(e.target.value.trim())});
-cargar();
+async function inicializar(){
+  const [dec,g]=await Promise.all([jsonSeguro('/api/decisiones'),jsonSeguro('/api/grafo')]);
+  const d=dec||await jsonSeguro('decisiones.json');
+  grafo=g||await jsonSeguro('grafo.json')||{nodos:[],aristas:[]};
+  document.getElementById('hash').textContent=(d.hash||'').slice(0,12)+'…';
+  out.innerHTML=(d.decisiones||[]).map(tarjetaDec).map(conGrafo).join('');
+  estado.textContent='Base verificada · '+(d.consulta||'estática');
+}
+
+async function consultar(){
+  const q=document.getElementById('q').value.trim(); if(!q) return;
+  estado.textContent='Consultando la base verificada…';
+  const r=await jsonSeguro('/api/preguntar?q='+encodeURIComponent(q));
+  if(!r){estado.textContent='No se pudo consultar.'; return;}
+  if(!r.encontrado){out.innerHTML=conGrafo(sinMatch(r)); estado.textContent='Sin coincidencia registrada.'; return;}
+  if(r.tipo==='evidencia'&&r.dato){out.innerHTML=conGrafo(tarjetaEvidencia(r.dato));}
+  else if(r.tipo==='decision'&&r.decision){out.innerHTML=conGrafo(tarjetaDec(r.decision));}
+  else {out.innerHTML=conGrafo(sinMatch({texto:'La salida registrada no está publicada.'}));}
+  estado.textContent='Respuesta registrada · hash '+(r.hash||'').slice(0,12);
+}
+
+document.getElementById('btn').onclick=consultar;
+document.getElementById('q').addEventListener('keydown',e=>{if(e.key==='Enter')consultar()});
+out.addEventListener('click',e=>{const b=e.target.closest('button[data-id]'); if(b) consultarPorId(b.dataset.id,b.dataset.tipo)});
+async function consultarPorId(id,tipo){
+  const url=tipo==='evidencia'?'/api/evidencias':'/api/decisiones';
+  const d=await jsonSeguro(url); const x=tipo==='evidencia'?(d.consultas||[]).find(v=>v.id===id):(d.decisiones||[]).find(v=>v.pregunta_id===id);
+  out.innerHTML=conGrafo(x?(tipo==='evidencia'?tarjetaEvidencia(x):tarjetaDec(x)):sinMatch({texto:'No encontrado.'}));
+}
+inicializar();
 </script>
 </body></html>

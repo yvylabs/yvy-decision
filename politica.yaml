@@ -73,13 +73,6 @@ recomendaciones:
     motivo: conflicto_entre_fuentes_oficiales
     texto: "Dos fuentes oficiales discrepan. Se requiere decisión humana."
     acciones: [elegir_fuente, abstener]
-  sitio_no_disponible:
-    motivo: sitio_oficial_no_disponible
-    texto: >-
-      Sitio web oficial NO DISPONIBLE. No es falta de dato: no pudimos
-      verificar la fuente en este momento. Reintentar antes de pedir dato.
-    acciones: [reintentar, ver_estado_del_sitio, no_usar]
-
 ui_obligatoria:
   - Fuente Oficial
   - Organismo

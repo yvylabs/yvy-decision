@@ -1,0 +1,50 @@
+# Router determinista de preguntas del demo. Sin LLM, sin adivinanzas.
+# Cada alias mapea a UNA salida registrada (evidencia o decisión).
+version: 1
+
+intenciones:
+  - id: escuelas_en_cerrillos
+    tipo: evidencia
+    alias:
+      - cuantas escuelas hay en cerrillos
+      - cuantas escuelas hay
+      - escolas en cerrillos
+      - numero de escuelas
+      - cuantos colegios hay
+    respuesta: escuelas_en_cerrillos
+
+  - id: inversion_educativa
+    tipo: decision
+    alias:
+      - debo construir mas escuelas en cerrillos
+      - construir escuelas
+      - inversion educativa
+      - necesito mas escuelas
+      - falta de escuelas
+    respuesta: inversion_educativa
+
+  - id: priorizar_intervencion
+    tipo: decision
+    alias:
+      - donde intervenir
+      - priorizar intervencion
+      - priorizar obras
+      - que zona intervenir
+    respuesta: priorizar_intervencion
+
+  - id: publicar_poblacion_barrio
+    tipo: decision
+    alias:
+      - publicar poblacion por barrio
+      - dato oficial de barrio
+      - poblacion barrio official
+    respuesta: publicar_poblacion_barrio
+
+  - id: zona_libre_de_mineria
+    tipo: decision
+    alias:
+      - libre de mineria
+      - concesiones mineras
+      - hay mineria en cerrillos
+    respuesta: zona_libre_de_mineria
+

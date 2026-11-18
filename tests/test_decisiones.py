@@ -33,9 +33,15 @@ class TestDecisiones(unittest.TestCase):
             self.assertGreater(len(x["fuentes_requeridas"]), 0)
         fuentes = json.loads((RAIZ / "web/fuentes.json").read_text(encoding="utf8"))
         self.assertGreater(len(fuentes["fuentes"]), 30)
-        self.assertIn("sitio_no_disponible", fuentes["recomendaciones"])
         ont = json.loads((RAIZ / "web/ontologia.json").read_text(encoding="utf8"))
         self.assertIn("hechos", ont)
+        ev = json.loads((RAIZ / "web/evidencias.json").read_text(encoding="utf8"))
+        escuelas = next((x for x in ev["consultas"] if x["id"] == "escuelas_en_cerrillos"), None)
+        self.assertIsNotNone(escuelas)
+        self.assertGreater(escuelas["valor"], 0)
+        self.assertEqual(len(escuelas["sha256"]), 64)
+        ints = json.loads((RAIZ / "web/intenciones.json").read_text(encoding="utf8"))
+        self.assertGreater(len(ints["intenciones"]), 0)
 
 
 if __name__ == "__main__":

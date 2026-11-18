@@ -1,3 +1,3 @@
 // Compatibilidad con despliegue Worker standalone.
-// La implementación canónica vive en web/functions/api/_live.mjs (Pages Functions).
-export * from '../web/functions/api/_live.mjs';
+// La implementación canónica vive en functions/api/_live.mjs (Pages Functions).
+export * from '../functions/api/_live.mjs';

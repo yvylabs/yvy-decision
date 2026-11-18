@@ -128,16 +128,6 @@ export async function handleLive(request, env) {
     const f = await jsonDe('/fuentes.json', url.origin, env);
     return Response.json(f || { fuentes: [] });
   }
-  if (ruta === '/api/debug') {
-    const debug = { tieneAssets: !!env?.ASSETS, tieneFetch: typeof env?.ASSETS?.fetch };
-    try {
-      const r = await (env?.ASSETS?.fetch || fetch)(new Request(new URL('/grafo.json', url.origin)));
-      debug.status = r.status;
-      debug.ctype = r.headers.get('content-type');
-      debug.texto = (await r.text()).slice(0, 80);
-    } catch (e) { debug.error = String(e); }
-    return Response.json(debug);
-  }
   if (ruta === '/api/grafo') {
     const g = await jsonDe('/grafo.json', url.origin, env);
     return Response.json(g || { nodos: [], aristas: [] });
@@ -156,7 +146,10 @@ export async function handleLive(request, env) {
       jsonDe('/grafo.json', url.origin, env),
     ]);
     if (!payload) return Response.json({ error: 'decisiones.json no publicado' }, { status: 503 });
-    const estados = await estadoFuentes(f?.fuentes || [], q);
+    const idsRequeridos = new Set((payload.decisiones || []).flatMap(
+      (d) => (d.fuentes_requeridas || []).map((r) => r.fuente).filter(Boolean)));
+    const fuentesRequeridas = (f?.fuentes || []).filter((x) => idsRequeridos.has(x.id));
+    const estados = await estadoFuentes(fuentesRequeridas, q, fetch, fuentesRequeridas.length);
     const vivo = overlayDecisiones(payload, estados, f?.recomendaciones || {});
     return Response.json({ ...vivo, linaje: { grafo: '/api/grafo', hash_estatico: payload.hash, nodos: grafo?.nodos?.length || 0 } });
   }

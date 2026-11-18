@@ -113,7 +113,7 @@ async function jsonDe(ruta, origin, env) {
   const url = new URL(ruta, origin);
   const assetFetch = env?.ASSETS?.fetch || fetch;
   try {
-    const r = await assetFetch(url);
+    const r = await assetFetch(new Request(url));
     if (!r.ok || !(r.headers.get('content-type') || '').includes('json')) return null;
     return await r.json();
   } catch { return null; }

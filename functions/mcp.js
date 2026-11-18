@@ -8,7 +8,7 @@ const TOOLS = [
 async function jsonDe(ruta, origin, env) {
   const assetFetch = env?.ASSETS?.fetch || fetch;
   try {
-    const r = await assetFetch(new URL(ruta, origin));
+    const r = await assetFetch(new Request(new URL(ruta, origin)));
     if (!r.ok || !(r.headers.get('content-type') || '').includes('json')) return null;
     return await r.json();
   } catch { return null; }

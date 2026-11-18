@@ -128,6 +128,16 @@ export async function handleLive(request, env) {
     const f = await jsonDe('/fuentes.json', url.origin, env);
     return Response.json(f || { fuentes: [] });
   }
+  if (ruta === '/api/debug') {
+    const debug = { tieneAssets: !!env?.ASSETS, tieneFetch: typeof env?.ASSETS?.fetch };
+    try {
+      const r = await (env?.ASSETS?.fetch || fetch)(new Request(new URL('/grafo.json', url.origin)));
+      debug.status = r.status;
+      debug.ctype = r.headers.get('content-type');
+      debug.texto = (await r.text()).slice(0, 80);
+    } catch (e) { debug.error = String(e); }
+    return Response.json(debug);
+  }
   if (ruta === '/api/grafo') {
     const g = await jsonDe('/grafo.json', url.origin, env);
     return Response.json(g || { nodos: [], aristas: [] });

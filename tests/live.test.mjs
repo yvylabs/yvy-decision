@@ -13,7 +13,7 @@ test('api/decisiones sirve la base, sin overlay de sitio', async () => {
   const d = await resp.json();
   assert.equal(d.consulta, 'base_verificada');
   assert.equal(d.decisiones[0].status, 'abstain');
-  assert.ok(!('sitio_oficial_no_disponible' in JSON.stringify(d)));
+  assert.ok(!JSON.stringify(d).includes('sitio_oficial_no_disponible'));
 });
 
 test('api/preguntar resuelve evidencia por alias', async () => {

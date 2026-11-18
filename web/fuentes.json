@@ -1,0 +1,555 @@
+{
+  "fuentes": [
+    {
+      "id": "datos_gob_ar",
+      "tipo": "ckan",
+      "base": "https://datos.gob.ar/api/3/action",
+      "modos": [
+        "package_search",
+        "package_show",
+        "resource_search",
+        "datastore_search"
+      ],
+      "organismo": "INDEC",
+      "alcance": "nacional",
+      "jurisdiccion": "nacional",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "argentina_gob_ar",
+      "tipo": "rest",
+      "base": "https://www.argentina.gob.ar",
+      "modos": [
+        "busqueda_tramites",
+        "ficha_organismo"
+      ],
+      "organismo": "APN",
+      "alcance": "nacional",
+      "jurisdiccion": "nacional",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "idera",
+      "tipo": "ckan",
+      "base": "https://www.idera.gob.ar",
+      "modos": [
+        "busqueda_catalogo",
+        "geoservicios"
+      ],
+      "organismo": "IGN",
+      "alcance": "nacional",
+      "jurisdiccion": "nacional",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "indec_series",
+      "tipo": "rest",
+      "base": "https://apis.datos.gob.ar/series/api",
+      "modos": [
+        "search",
+        "series"
+      ],
+      "organismo": "INDEC",
+      "alcance": "nacional",
+      "jurisdiccion": "nacional",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "bcra",
+      "tipo": "rest",
+      "base": "https://api.bcra.gob.ar/estadisticas/v4.0",
+      "modos": [
+        "variables",
+        "datosVariable",
+        "cambiarias"
+      ],
+      "organismo": "BCRA",
+      "alcance": "nacional",
+      "jurisdiccion": "nacional",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "presupuesto_abierto",
+      "tipo": "rest",
+      "base": "https://www.presupuestoabierto.gob.ar/api",
+      "modos": [
+        "gasto",
+        "ingresos",
+        "programacion_fisica",
+        "ejecucion_fisica"
+      ],
+      "organismo": "Ministerio de Economia",
+      "alcance": "nacional",
+      "jurisdiccion": "nacional",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "comprar_ar",
+      "tipo": "rest",
+      "base": "https://comprar.gob.ar",
+      "modos": [
+        "licitaciones",
+        "adjudicaciones",
+        "busqueda_avanzada"
+      ],
+      "organismo": "Oficina Nacional de Contrataciones",
+      "alcance": "nacional",
+      "jurisdiccion": "nacional",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "boletin_oficial",
+      "tipo": "listado_pdf",
+      "base": "https://www.boletinoficial.gob.ar",
+      "modos": [
+        "busqueda_avanzada",
+        "edicion_dia"
+      ],
+      "organismo": "Poder Ejecutivo",
+      "alcance": "nacional",
+      "jurisdiccion": "nacional",
+      "estado": "activo",
+      "pdf_escaneado": true
+    },
+    {
+      "id": "arca",
+      "tipo": "listado_pdf",
+      "base": "https://www.afip.gob.ar",
+      "modos": [
+        "listado_pdf"
+      ],
+      "organismo": "ARCA",
+      "alcance": "nacional",
+      "jurisdiccion": "nacional",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "ign",
+      "tipo": "wms_wfs",
+      "base": "https://wms.ign.gob.ar/geoserver/ows",
+      "modos": [
+        "GetCapabilities",
+        "GetMap",
+        "GetFeatureInfo",
+        "GetFeature"
+      ],
+      "organismo": "IGN",
+      "alcance": "nacional",
+      "jurisdiccion": "nacional",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "smn",
+      "tipo": "csv_directo",
+      "base": "https://www.smn.gob.ar",
+      "modos": [
+        "pronostico_5_dias",
+        "alertas"
+      ],
+      "organismo": "SMN",
+      "alcance": "nacional",
+      "jurisdiccion": "nacional",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "shn",
+      "tipo": "csv_directo",
+      "base": "https://www.hidro.gob.ar",
+      "modos": [
+        "mareas",
+        "tablas_marea",
+        "alertas_crecida"
+      ],
+      "organismo": "SHN",
+      "alcance": "nacional",
+      "jurisdiccion": "nacional",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "conae",
+      "tipo": "rest",
+      "base": "https://catalog.saocom.conae.gov.ar/catalog",
+      "modos": [
+        "imagenes_satelitales",
+        "humedad_suelo",
+        "catalogo_saocom"
+      ],
+      "organismo": "CONAE",
+      "alcance": "nacional",
+      "jurisdiccion": "nacional",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "sirgas",
+      "tipo": "csv_directo",
+      "base": "https://sirgas.ipgh.org",
+      "modos": [
+        "estaciones_gnss",
+        "coordenadas",
+        "marco_referencia"
+      ],
+      "organismo": "SIRGAS",
+      "alcance": "nacional",
+      "jurisdiccion": "internacional",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "ministerio_defensa",
+      "tipo": "listado_pdf",
+      "base": "https://www.argentina.gob.ar/defensa",
+      "modos": [
+        "listado_pdf"
+      ],
+      "organismo": null,
+      "alcance": "nacional",
+      "jurisdiccion": "nacional",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "citedef",
+      "tipo": "listado_pdf",
+      "base": "https://www.argentina.gob.ar/defensa/citedef",
+      "modos": [
+        "listado_pdf"
+      ],
+      "organismo": null,
+      "alcance": "nacional",
+      "jurisdiccion": "nacional",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "mincyt",
+      "tipo": "ckan",
+      "base": "https://datos.gob.ar/api/3/action",
+      "modos": [
+        "package_search"
+      ],
+      "organismo": "MINCYT",
+      "alcance": "nacional",
+      "jurisdiccion": "nacional",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "undef",
+      "tipo": "listado_pdf",
+      "base": "https://www.undef.edu.ar",
+      "modos": [
+        "listado_pdf"
+      ],
+      "organismo": null,
+      "alcance": "nacional",
+      "jurisdiccion": "nacional",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "ipgh",
+      "tipo": "listado_pdf",
+      "base": "https://www.ipgh.org",
+      "modos": [
+        "listado_pdf"
+      ],
+      "organismo": "IPGH",
+      "alcance": "internacional",
+      "jurisdiccion": "internacional",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "un_ggim",
+      "tipo": "listado_pdf",
+      "base": "https://ggim.un.org",
+      "modos": [
+        "listado_pdf",
+        "sesiones_comite"
+      ],
+      "organismo": null,
+      "alcance": "internacional",
+      "jurisdiccion": "internacional",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "un_ggim_americas",
+      "tipo": "listado_pdf",
+      "base": "https://www.un-ggim-americas.org",
+      "modos": [
+        "listado_pdf"
+      ],
+      "organismo": null,
+      "alcance": "internacional",
+      "jurisdiccion": "internacional",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "un_ggrf",
+      "tipo": "listado_pdf",
+      "base": "https://ggim.un.org",
+      "modos": [
+        "listado_pdf"
+      ],
+      "organismo": null,
+      "alcance": "internacional",
+      "jurisdiccion": "internacional",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "iugc_cafa_cfc",
+      "tipo": "sin_api",
+      "base": "https://www.argentina.gob.ar/defensa",
+      "modos": [
+        "busqueda_via_argentina_gob_ar",
+        "busqueda_via_boletin_oficial"
+      ],
+      "organismo": null,
+      "alcance": "nacional",
+      "jurisdiccion": "nacional",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "idesa_salta",
+      "tipo": "wms_wfs",
+      "base": "https://geoportal.salta.gob.ar",
+      "modos": [
+        "GetCapabilities",
+        "GetMap",
+        "GetFeature",
+        "busqueda_catalogo_geonode"
+      ],
+      "organismo": "IDESA",
+      "alcance": "provincia_salta",
+      "jurisdiccion": "provincia_salta",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "inmuebles_salta",
+      "tipo": "listado_pdf",
+      "base": "https://www.inmuebles.gov.ar",
+      "modos": [
+        "consulta_catastro",
+        "consulta_nomenclatura",
+        "consulta_plano"
+      ],
+      "organismo": "Direccion General de Inmuebles",
+      "alcance": "provincia_salta",
+      "jurisdiccion": "provincia_salta",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "catastro_minero_salta",
+      "tipo": "wms_wfs",
+      "base": "https://geoportal.salta.gob.ar",
+      "modos": [
+        "catastro_minero",
+        "minas",
+        "canteras",
+        "peticiones_mensura"
+      ],
+      "organismo": "Secretaria de Mineria y Energia de Salta",
+      "alcance": "provincia_salta",
+      "jurisdiccion": "provincia_salta",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "boletin_oficial_salta",
+      "tipo": "listado_pdf",
+      "base": "https://boletinoficialsalta.gob.ar",
+      "modos": [
+        "busqueda_avanzada",
+        "edicion_dia",
+        "secciones",
+        "ley_presupuesto"
+      ],
+      "organismo": "Direccion General de Boletin Oficial",
+      "alcance": "provincia_salta",
+      "jurisdiccion": "provincia_salta",
+      "estado": "activo",
+      "pdf_escaneado": true
+    },
+    {
+      "id": "estadisticas_salta",
+      "tipo": "listado_pdf",
+      "base": "https://estadisticas.salta.gov.ar",
+      "modos": [
+        "anuario",
+        "exportaciones",
+        "EPH",
+        "actividad_economica",
+        "empleo_minero"
+      ],
+      "organismo": "Direccion General de Estadisticas y Censo",
+      "alcance": "provincia_salta",
+      "jurisdiccion": "provincia_salta",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "salta_compra",
+      "tipo": "rest",
+      "base": "https://saltacompra.gob.ar",
+      "modos": [
+        "licitaciones",
+        "contrataciones",
+        "busqueda_publicacion"
+      ],
+      "organismo": "Secretaria de Procedimientos de Contrataciones",
+      "alcance": "provincia_salta",
+      "jurisdiccion": "provincia_salta",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "dgr_salta",
+      "tipo": "listado_pdf",
+      "base": "https://www.dgrsalta.gov.ar",
+      "modos": [
+        "resoluciones_generales",
+        "oficina_virtual",
+        "padrones"
+      ],
+      "organismo": "Direccion General de Rentas",
+      "alcance": "provincia_salta",
+      "jurisdiccion": "provincia_salta",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "obras_salta",
+      "tipo": "rest",
+      "base": "https://obras.salta.gob.ar",
+      "modos": [
+        "busqueda_obras",
+        "ficha_obra"
+      ],
+      "organismo": "Gobierno de Salta",
+      "alcance": "provincia_salta",
+      "jurisdiccion": "provincia_salta",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "idemsa",
+      "tipo": "wms_wfs",
+      "base": "https://idemsa.municipalidadsalta.gob.ar",
+      "modos": [
+        "mapas_tematicos",
+        "datos_abiertos",
+        "wms",
+        "wfs"
+      ],
+      "organismo": "Municipalidad de Salta",
+      "alcance": "municipio_salta_capital",
+      "jurisdiccion": "municipio_salta_capital",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "salta_3d",
+      "tipo": "rest",
+      "base": "https://salta3d.municipalidadsalta.gob.ar",
+      "modos": [
+        "consulta_por_catastro",
+        "consulta_por_direccion"
+      ],
+      "organismo": "Municipalidad de Salta",
+      "alcance": "municipio_salta_capital",
+      "jurisdiccion": "municipio_salta_capital",
+      "estado": "activo",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "datos_publicos_inteligentes_salta",
+      "tipo": "rest",
+      "base": null,
+      "modos": [
+        "busqueda_tematica",
+        "descarga_datos"
+      ],
+      "organismo": "Secretaria de Modernizacion y Servicios Publicos",
+      "alcance": "provincia_salta",
+      "jurisdiccion": "provincia_salta",
+      "estado": "pendiente_lanzamiento",
+      "pdf_escaneado": false
+    },
+    {
+      "id": "boletin_municipal_salta",
+      "tipo": "rest",
+      "base": "https://municipalidadsalta.gob.ar/wp-json/wp/v2",
+      "modos": [
+        "boletin"
+      ],
+      "organismo": "Municipalidad de Salta",
+      "alcance": "municipio_salta_capital",
+      "jurisdiccion": "municipio_salta_capital",
+      "estado": "activo",
+      "pdf_escaneado": false
+    }
+  ],
+  "recomendaciones": {
+    "sin_fuente_oficial_encontrada": {
+      "motivo": "sin_fuente_oficial_encontrada",
+      "texto": "No hay fuente oficial ENCONTRADA para este dato. Es posible generar una estimación basada en fuentes científicas pero NO oficiales.",
+      "acciones": [
+        "ver_metodo",
+        "generar_estimacion",
+        "no_usar"
+      ]
+    },
+    "fuente_oficial_pinneada_cambio_hash": {
+      "motivo": "hash_no_coincide",
+      "texto": "La fuente oficial cambió desde la última decisión. No se usa hasta verificar.",
+      "acciones": [
+        "revisar_fuente",
+        "aceptar_nuevo_hash",
+        "rechazar"
+      ]
+    },
+    "extraccion_dudosa": {
+      "motivo": "extraccion_no_confiable",
+      "texto": "El PDF se extrajo con baja confianza. No se usa para decidir.",
+      "acciones": [
+        "solicitar_curaduria",
+        "descartar"
+      ]
+    },
+    "conflicto": {
+      "motivo": "conflicto_entre_fuentes_oficiales",
+      "texto": "Dos fuentes oficiales discrepan. Se requiere decisión humana.",
+      "acciones": [
+        "elegir_fuente",
+        "abstener"
+      ]
+    },
+    "sitio_no_disponible": {
+      "motivo": "sitio_oficial_no_disponible",
+      "texto": "Sitio web oficial NO DISPONIBLE. No es falta de dato: no pudimos verificar la fuente en este momento. Reintentar antes de pedir dato.",
+      "acciones": [
+        "reintentar",
+        "ver_estado_del_sitio",
+        "no_usar"
+      ]
+    }
+  }
+}

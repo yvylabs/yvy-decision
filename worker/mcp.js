@@ -1,5 +1,6 @@
-// MCP de solo lectura sobre decisiones.json + grafo.json.
-// Sin Python, sin base de datos, sin escritura. Corre en el free tier.
+// MCP + API de consulta en vivo. Solo lectura, sin Python, sin BD.
+import { handleLive } from './live.mjs';
+
 const TOOLS = [
   { name: 'buscar_fuentes', description: 'Lista fuentes oficiales del allowlist (solo lectura)' },
   { name: 'decidir', description: 'Devuelve status, puede_decidir, motivo y recomendación por pregunta' },
@@ -9,6 +10,8 @@ const TOOLS = [
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    const respuestaViva = await handleLive(request);
+    if (respuestaViva) return respuestaViva;
     if (url.pathname !== '/mcp') return new Response('not found', { status: 404 });
     if (request.method === 'GET') {
       return Response.json({ schema: 'yvy-mcp-v1', tools: TOOLS, solo_lectura: true });

@@ -19,8 +19,11 @@ jobs:
           python-version: '3.11'
       - name: Instalar dependencias
         run: pip install -r requirements-decisiones.txt
-      - name: Generar decisiones
-        run: python runner/decisiones.py
+      - name: Generar decisiones y correr tests
+        run: |
+          python runner/decisiones.py
+          python -m unittest tests.test_decisiones
+          node --test tests/live.test.mjs
       - name: Publicar artefactos
         run: |
           git config user.name "github-actions[bot]"

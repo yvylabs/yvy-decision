@@ -1,6 +1,6 @@
 {
   "schema": "yvy-decision-v1",
-  "generado": "2026-11-18T19:12:32+00:00",
+  "generado": "2026-11-18T19:24:16+00:00",
   "alcance": {
     "nombre": "Cerrillos",
     "provincia": "Salta",
@@ -52,7 +52,21 @@
         ]
       },
       "accion_si": "ranking de zonas por brecha con confianza declarada",
-      "accion_no": "lista de fuentes que faltan para poder rankear"
+      "accion_no": "lista de fuentes que faltan para poder rankear",
+      "fuentes_requeridas": [
+        {
+          "hecho": "poblacion_barrio",
+          "fuente": "poblacion_barrio_estimada"
+        },
+        {
+          "hecho": "establecimientos_educativos",
+          "fuente": "datos_gob_ar"
+        },
+        {
+          "hecho": "red_vial",
+          "fuente": "idesa_salta"
+        }
+      ]
     },
     {
       "pregunta_id": "publicar_poblacion_barrio",
@@ -78,7 +92,13 @@
         ]
       },
       "accion_si": "nunca con dato generado",
-      "accion_no": "usar radio censal o rotular como estimación Yvy Labs"
+      "accion_no": "usar radio censal o rotular como estimación Yvy Labs",
+      "fuentes_requeridas": [
+        {
+          "hecho": "poblacion_radio",
+          "fuente": "radios_indec_2022"
+        }
+      ]
     },
     {
       "pregunta_id": "inversion_educativa",
@@ -109,7 +129,17 @@
         ]
       },
       "accion_si": "comparación por brecha con escuelas y matrícula",
-      "accion_no": "pedir fuente oficial al Ministerio de Educación"
+      "accion_no": "pedir fuente oficial al Ministerio de Educación",
+      "fuentes_requeridas": [
+        {
+          "hecho": "establecimientos_educativos",
+          "fuente": "datos_gob_ar"
+        },
+        {
+          "hecho": "poblacion_barrio",
+          "fuente": "poblacion_barrio_estimada"
+        }
+      ]
     },
     {
       "pregunta_id": "zona_libre_de_mineria",
@@ -135,10 +165,16 @@
         ]
       },
       "accion_si": "dictamen con polígonos vigentes y fecha",
-      "accion_no": "pedir GeoJSON de concesiones a IDESA / Secretaría de Minería"
+      "accion_no": "pedir GeoJSON de concesiones a IDESA / Secretaría de Minería",
+      "fuentes_requeridas": [
+        {
+          "hecho": "concesiones_mineras",
+          "fuente": "catastro_minero_salta"
+        }
+      ]
     }
   ],
-  "hash": "c1d343ef1898998caa7745046977019e225db2d14424143132b92fde86e7cb44",
+  "hash": "22ea39d533f73b33689c8cd43edd8b04c3d187a0c27880f9255ace6371e84316",
   "canonico": "RFC8785-like",
   "algoritmo": "sha256"
 }

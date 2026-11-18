@@ -159,6 +159,16 @@ def main():
     idx = indice_fuentes(allow, generadas, fuentes_selladas())
     decisiones = [evaluar(p, ont, idx, politica, generadas) for p in preguntas]
 
+    # Mapa hecho -> fuente para que el Worker pueda consultar en vivo.
+    hecho_a_fuente = {}
+    for hid, h in (ont.get("hechos") or {}).items():
+        hecho_a_fuente[hid] = (h.get("fuentes") or [None])[0]
+    for d, p in zip(decisiones, preguntas):
+        d["fuentes_requeridas"] = [
+            {"hecho": h, "fuente": hecho_a_fuente.get(h)}
+            for h in (p.get("requiere") or [])
+        ]
+
     nodos = [{"id": "pregunta:" + d["pregunta_id"], "tipo": "pregunta"} for d in decisiones]
     aristas = []
     for d in decisiones:
@@ -187,6 +197,17 @@ def main():
     WEB.mkdir(exist_ok=True)
     (WEB / "decisiones.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf8")
     (WEB / "grafo.json").write_text(json.dumps(grafo, ensure_ascii=False, indent=2) + "\n", encoding="utf8")
+    # Contratos livianos para el Worker (consulta en vivo sin YAML en runtime).
+    (WEB / "fuentes.json").write_text(json.dumps({
+        "fuentes": [{
+            "id": f.get("id"), "tipo": f.get("tipo"), "base": f.get("base"),
+            "modos": f.get("modos") or [], "organismo": (f.get("organismos_permitidos") or [None])[0],
+            "alcance": f.get("alcance_territorial"), "jurisdiccion": f.get("jurisdiccion"),
+            "estado": f.get("estado", "activo"), "pdf_escaneado": bool(f.get("pdf_escaneado")),
+        } for f in allow],
+        "recomendaciones": (politica.get("recomendaciones") or {}),
+    }, ensure_ascii=False, indent=2) + "\n", encoding="utf8")
+    (WEB / "ontologia.json").write_text(json.dumps(ont, ensure_ascii=False, indent=2) + "\n", encoding="utf8")
 
     print(f"[yvy-decision] {len(decisiones)} preguntas · " +
           ", ".join(f"{d['pregunta_id']}={d['status']}" for d in decisiones))

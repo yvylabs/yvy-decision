@@ -27,6 +27,16 @@ class TestDecisiones(unittest.TestCase):
         self.assertGreater(len(self.g["nodos"]), 0)
         self.assertGreater(len(self.g["aristas"]), 0)
 
+    def test_contratos_para_consulta_en_vivo(self):
+        for x in self.d["decisiones"]:
+            self.assertIn("fuentes_requeridas", x)
+            self.assertGreater(len(x["fuentes_requeridas"]), 0)
+        fuentes = json.loads((RAIZ / "web/fuentes.json").read_text(encoding="utf8"))
+        self.assertGreater(len(fuentes["fuentes"]), 30)
+        self.assertIn("sitio_no_disponible", fuentes["recomendaciones"])
+        ont = json.loads((RAIZ / "web/ontologia.json").read_text(encoding="utf8"))
+        self.assertIn("hechos", ont)
+
 
 if __name__ == "__main__":
     unittest.main()
